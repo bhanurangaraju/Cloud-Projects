@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+{% if value=="true"  %}
+    <h1 style="color: darkgreen">CONGRATULATIONS {{ first }} {{ second }}!!! ADMISSION IS POSSIBLE</h1>
+{% else %}
+    <h1 style="color: darkred">SORRY {{ first }} {{ second }} !!! ADMISSION IS NOT POSSIBLE </h1>
+{% endif %}
+
+logout here--- :  <a style ="color:maroon;font-size: larger" href='/logout'>LOGOUT</a>
+</html>

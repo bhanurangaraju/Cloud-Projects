@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head >
+    <meta charset="UTF-8">
+    <center> <title>UNIVERSITY ADMISSION ESTIMATOR</title></center>
+
+    <style type="text/css">
+        form{text-align-all: center}
+        body {
+    background-image: url("http://hdimages.org/wp-content/uploads/2016/10/hacker-wallpaper7.jpg");
+        color :white;
+            size: 40px;
+        }
+
+    </style>
+
+</head>
+
+
+<body style="text-align: center">
+<h1 style="color:ghostwhite">UNIVERSITY ADMISSION ESTIMATOR</h1>
+<div align="center" style="size: 40px">
+<form  action="/estimate" method="POST">
+
+  FIRST NAME &nbsp
+  <input type="text" name="firstname"><br><br>
+  LAST NAME &nbsp<input type="text" name="lastname"><br><br>
+    GENDER: &nbsp; <input type="radio" name="gender" value="male" checked>Male &nbsp <input type="radio" name="gender" value="female">Female &nbsp
+ <input type="radio" name="gender" value="other">Other  <br><br>
+    EDUCATION LEVEL : <select name="Program Level">
+  <option value="High School">High School</option>
+  <option value="Under Graduate">Under Graduate</option>
+  <option value="Graduate">Graduate</option>
+  </select><br><br>
+
+
+    GRE/SAT &nbsp &nbsp &nbsp <input type="text" name="GRE" value=" "><br><br>
+    TOEFL/IELTS <input type="text" name="TOEFL/IELTS" value=" "><br><br>
+    Cumulative GPA  <input type="text" name="GPA" value=" "><br><br>
+    Graduation Year <input type="text" name="year" value=" "><br><br>
+    <input type="submit" value="Submit">
+  <input type="reset">
+</form>
+</div>
+</body>
+</html>

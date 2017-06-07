@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta charset = "utf-8">
+      <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
+         rel = "stylesheet">
+      <script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+      <script type="text/javascript" src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+      <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+        <script type="text/javascript">
+        	$(function () {
+            $("#date").datepicker({ dateFormat: 'yymmdd' }).val();
+		
+          });
+    		</script>
+
+		<script type="text/javascript">
+		$(document).ready(function(){
+			 
+        	$("#execute1").click(function UpdateChart() {
+			var datapts = [];
+			 var datearr=[];
+			 var tmaxarr=[];
+			 var tminarr=[];
+	var date = $("#date").val();
+	if (date==""||date.length>8||parseInt(date.slice(0,4))>2020||parseInt(date.slice(4,6))>12||parseInt(date.slice(-2))>31)
+			{alert("enter valid date");
+				return;}
+	    //Converting the value to yyyy.mm.dd format
+        var df = date.substring(0,4) + '.' +date.substring(4,6)+'.'+date.substring(6,8);
+
+        for (var i = 0; i < 5; i++) {
+          var dat2e = new Date(df);
+		  
+          //incrementing the date
+          dat2e.setDate(dat2e.getDate() + i);
+          //converting into unix time
+		    var dat2 = new Date(dat2e).getTime() / 1000;
+			datearr.push(dat2e.getFullYear() +""+ (("0" + (dat2e.getMonth() + 1)).slice(-2)) +""+(("0" + (dat2e.getDate())).slice(-2)));
+        				
+				var URI = "https://api.darksky.net/forecast/9e9baf38d4564d27bce535929c25c2d1/39.1032,-84.51,"+dat2+"?exclude=currently,flags,minutely,hourly,alerts";
+				    $.ajax({
+				        url: URI,
+				        type: "GET",
+					    dataType: "jsonp"
+						
+				    }).success(function(data) {
+							timestamp=data['daily']['data'][0].time
+							var datec = new Date(timestamp*1000);
+							var fmDate = datec.getFullYear() +""+ (("0" + (datec.getMonth() + 1)).slice(-2)) +""+(("0" + (datec.getDate())).slice(-2));
+							
+							tmaxarr.push(data['daily']['data'][0].temperatureMax);
+							tminarr.push(data['daily']['data'][0].temperatureMin);
+
+							var chart = new CanvasJS.Chart("chartContainer",
+					    {
+					      title:{
+					      text: "Forecast from External API [Bonus]"  
+					      },
+						  
+					      animationEnabled: true,
+					      toolTip:{
+	                          shared:true,
+							  content: "{name}: {y}°F",
+	                        },
+					      theme: "theme2",
+					      legend:{
+								verticalAlign: "center",
+								horizontalAlign: "right"
+							},
+							 axisY: {
+								includeZero: false,
+								suffix: "°F",
+									},
+					      data: [
+					      {        
+					        type: "line",
+					        showInLegend: true,
+							lineThickness: 2,
+							name: "TMIN",
+							markerType: "square",
+							color: "#20B2AA",
+					        dataPoints: [
+					        { label: parseInt(datearr[0]), y: tminarr[0] },
+						{ label: parseInt(datearr[1]), y: tminarr[1] },
+					        { label: parseInt(datearr[2]), y: tminarr[2] },
+					        { label: parseInt(datearr[3]), y: tminarr[3] },
+					        { label: parseInt(datearr[4]), y: tminarr[4] },
+					      
+					        ]
+					      },
+					        {        
+					        type: "line",
+					        showInLegend: true,
+							name: "TMAX",
+							color: "red",
+							lineThickness: 2,
+					        dataPoints: [
+					      	{ label: parseInt(datearr[0]), y: tmaxarr[0] },
+						{ label: parseInt(datearr[1]), y: tmaxarr[1] },
+					        { label: parseInt(datearr[2]), y: tmaxarr[2] },
+					        { label: parseInt(datearr[3]), y: tmaxarr[3] },
+					        { label: parseInt(datearr[4]), y: tmaxarr[4]},
+					        ]
+					      },        
+					      ],
+				          legend:{
+				              cursor:"pointer",
+				              itemclick:function(e){
+				                if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+				                	e.dataSeries.visible = false;
+				                }
+				                else{
+				                  e.dataSeries.visible = true;
+				                }
+				                }
+				          }
+					    });
+						
+							chart.render();
+
+					});
+						 
+			 }
+            });
+
+    });
+        </script>
+
+           <script type="text/javascript">
+        	$(function () {
+            $("#date2").datepicker({ dateFormat: 'yymmdd' }).val();
+          });
+    		</script>
+
+		<script type="text/javascript">
+		$(document).ready(function(){
+
+
+        	$("#execute1").click(function() {
+			if ($("#date").val()==""){alert("Please enter valid date");}
+             var datapts = [];
+			 var datearr=[];
+			 var tmaxarr=[];
+			 var tminarr=[];
+             var URI = "http://bhanurangaraju.pythonanywhere.com/weather/forecasts/" + $("#date").val();
+				    $.ajax({
+				        url: URI,
+				        type: "GET",
+				        dataType: "json"
+				    }).then(function(data) {
+				    	
+						for(var i =0 ; i<5; i++) {
+							datearr.push(data[i].DATE);
+							tmaxarr.push(data[i].TMAX);
+							tminarr.push(data[i].TMIN);
+				        		    	}
+				var chart2 = new CanvasJS.Chart("chartContainer2",
+					    {
+					      title:{
+					      text: "Forecast from DATABASE [Algorithm]"  
+					      },
+						  
+					      animationEnabled: true,
+					      toolTip:{
+	                          shared:true,
+							  content: "{name}: {y}°F",
+	                        },
+					      theme: "theme2",
+					      legend:{
+								verticalAlign: "center",
+								horizontalAlign: "right"
+							},
+							 axisY: {
+								includeZero: false,
+								suffix: "°F",
+									},
+					      data: [
+					      {        
+					        type: "line",
+					        showInLegend: true,
+							lineThickness: 2,
+							name: "TMIN",
+							markerType: "square",
+							color: "#20B2AA",
+					        dataPoints: [
+					        { label: parseInt(datearr[0]), y: tminarr[0] },
+					        { label: parseInt(datearr[1]), y: tminarr[1] },
+					        { label: parseInt(datearr[2]), y: tminarr[2] },
+					        { label: parseInt(datearr[3]), y: tminarr[3] },
+					        { label: parseInt(datearr[4]), y: tminarr[4] },
+					        
+					      
+					        ]
+					      },
+					        {        
+					        type: "line",
+					        showInLegend: true,
+							name: "TMAX",
+							color: "red",
+							lineThickness: 2,
+					        dataPoints: [
+					        { label: parseInt(datearr[0]), y: tmaxarr[0] },
+					        { label: parseInt(datearr[1]), y: tmaxarr[1] },
+					        { label: parseInt(datearr[2]), y: tmaxarr[2] },
+					        { label: parseInt(datearr[3]), y: tmaxarr[3] },
+					        { label: parseInt(datearr[4]), y: tmaxarr[4] },
+					        
+					        ]
+					      },        
+					      ],
+				          legend:{
+				              cursor:"pointer",
+				              itemclick:function(e){
+				                if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+				                	e.dataSeries.visible = false;
+				                }
+				                else{
+				                  e.dataSeries.visible = true;
+				                }
+				                
+
+				              }
+				          }
+					    });
+
+					    chart2.render();
+
+      });
+				    });
+
+    });
+    </script>
+
+
+    </head>
+
+	<body background="http://www.mikeafford.com/store/store-images/MAm-skies1-0033-watermarked.jpg">
+	       <p align="center"> Date: <input type="text" id="date" value="YYYYMMDD"></p>
+          <div align="center">
+        	<input type="button" id="execute1" value="FORECAST">
+          </div>
+	
+<table>
+        <tr>
+          <b><th><p > <strong>FORECAST FROM THE DATABASE USING REST API</strong></p></th></b>
+          
+		  <br><th></th>
+          <b><th><p > <strong>FORECAST USING EXTERNAL WEATHER API</strong></p><p > https://api.darksky.net/forecast/9e9baf38d4564d27bce535929c25c2d1/39.1032,-84.51,[DATE]?exclude=currently,flags,minutely,hourly</p></th></b>
+          <br>
+        </tr>
+        
+		<tr>
+          <th>
+            <div  id="chartContainer2" style="height: 275px; width: 450px; position: relative"></div>
+ 
+          </th>
+		   <br><th><div style="height: 275px; width: 220px; position: relative"></div></th>
+		    <b><th> <div align="right" id="chartContainer" style="height: 275px; width: 450px; position: relative"></div></th></b>
+			<br>       
+	   </tr>
+      </table>
+	
+    </body>
+</html>
+
+
+
+
+

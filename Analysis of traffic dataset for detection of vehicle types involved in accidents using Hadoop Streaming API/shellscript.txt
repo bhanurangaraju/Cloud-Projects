@@ -1,0 +1,10 @@
+Command to clone the project from git hub:
+	>> git clone https://github.uc.edu/rangarba/Cloud-Computing.git/tree/master/Hadoop
+
+Copy mapper.py and reducer.py to your home directory.
+
+Commands to run mappper and reducer on Hadoop File System:
+	>>	hadoop jar /opt/hadoop-2.7.1/share/hadoop/tools/lib/hadoop-streaming-2.7.1.jar \
+		-file /home/rangarba/mapper.py    -mapper /home/rangarba/mapper.py \
+		-file /home/rangarba/reducer.py   -reducer /home/rangarba/reducer.py \
+		-input /data/nyc/nyc-traffic.csv  -output /tmp/finalout1.txt
